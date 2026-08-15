@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!--
+			RimWorld 1.6 运行在 .NET Framework 4.7.2 上，所以目标框架必须是 net472。
+			（不是 net8.0！net8.0 只是编译用的 SDK 版本，和运行时的框架是两回事。）
+		-->
+		<TargetFramework>net472</TargetFramework>
+
+		<!-- 编译产物 DLL 的名字，会出现在 Assemblies 文件夹里 -->
+		<AssemblyName>CulturalRitualLimits</AssemblyName>
+		<RootNamespace>RITLIM.CulturalRitualLimits</RootNamespace>
+
+		<!-- 允许使用最新的 C# 语法 -->
+		<LangVersion>latest</LangVersion>
+
+		<!-- 直接编译到 Mod 根目录的 Assemblies 文件夹，省得手动复制 -->
+		<OutputPath>..\..\Assemblies\</OutputPath>
+
+		<!--
+			默认情况下 SDK 会在输出路径后面再追加一级框架名文件夹（如 Assemblies\net472\），
+			而 RimWorld 只从 Assemblies 根目录加载 DLL，所以必须关掉这个行为。
+		-->
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+		<!-- 不生成 .pdb 调试符号文件，发布用的 DLL 不需要它 -->
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!--
+			RimWorld 1.6 游戏程序集（Assembly-CSharp.dll、UnityEngine 各模块）的"引用程序集"，
+			由社区 Krafs.Rimworld.Ref 项目从游戏文件生成并发布到 NuGet。
+			有了它，没有安装游戏的电脑也能编译 RimWorld mod。
+			它只是"编译时的说明书"，不会被复制到输出目录；运行时用的是游戏自带的 DLL。
+		-->
+		<PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" />
+
+		<!--
+			Harmony 补丁库。ExcludeAssets="runtime" 表示"只用于编译，不要复制到输出目录"——
+			因为游戏自己已经带了 0Harmony.dll，mod 如果再带一份会冲突。
+		-->
+		<PackageReference Include="Lib.Harmony" Version="2.*" ExcludeAssets="runtime" />
+
+		<!--
+			本机没有安装 .NET Framework 4.7.2 开发者包时，
+			这个包提供编译 net472 所需的参考程序集。
+		-->
+		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+	</ItemGroup>
+
+</Project>
