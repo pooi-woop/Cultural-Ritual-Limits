@@ -717,11 +717,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Backup\\Downloads\\Cultural Ritual Limits\\Source\\CulturalRitualLimits\\CulturalRitualLimits.csproj",
+      "projectUniqueName": "E:\\steam\\steamapps\\common\\RimWorld\\Mods\\Cultural-Ritual-Limits\\Source\\CulturalRitualLimits\\CulturalRitualLimits.csproj",
       "projectName": "CulturalRitualLimits",
-      "projectPath": "D:\\Backup\\Downloads\\Cultural Ritual Limits\\Source\\CulturalRitualLimits\\CulturalRitualLimits.csproj",
+      "projectPath": "E:\\steam\\steamapps\\common\\RimWorld\\Mods\\Cultural-Ritual-Limits\\Source\\CulturalRitualLimits\\CulturalRitualLimits.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "D:\\Backup\\Downloads\\Cultural Ritual Limits\\Source\\CulturalRitualLimits\\obj\\",
+      "outputPath": "E:\\steam\\steamapps\\common\\RimWorld\\Mods\\Cultural-Ritual-Limits\\Source\\CulturalRitualLimits\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config"

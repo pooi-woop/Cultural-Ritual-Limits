@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ned5eBiZKUM=",
+  "dgSpecHash": "p0IaPudzmW4=",
   "success": true,
-  "projectFilePath": "D:\\Backup\\Downloads\\Cultural Ritual Limits\\Source\\CulturalRitualLimits\\CulturalRitualLimits.csproj",
+  "projectFilePath": "E:\\steam\\steamapps\\common\\RimWorld\\Mods\\Cultural-Ritual-Limits\\Source\\CulturalRitualLimits\\CulturalRitualLimits.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\krafs.rimworld.ref\\1.6.4871\\krafs.rimworld.ref.1.6.4871.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\lib.harmony\\2.4.2\\lib.harmony.2.4.2.nupkg.sha512",
