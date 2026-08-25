@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CulturalRitualLimits")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bd3b438bed42767ed152023239b4863f2f7e81fe")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9459a64e433f438058f45f6fb97ac94ea8a72bd9")]
 [assembly: System.Reflection.AssemblyProductAttribute("CulturalRitualLimits")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CulturalRitualLimits")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
