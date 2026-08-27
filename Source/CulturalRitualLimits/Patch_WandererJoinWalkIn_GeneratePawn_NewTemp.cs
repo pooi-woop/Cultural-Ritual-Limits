@@ -8,34 +8,37 @@ namespace RITLIM.CulturalRitualLimits
 	/// <summary>
 	/// 核心补丁：压低"文化仪式招募"来的小人的技能等级。
 	///
-	/// 【原版机制科普——为什么补丁打在这里】
-	/// Ideology DLC 的招募仪式（Recruitment）判定成功时，并不是当场生成小人，
-	/// 而是由 RitualAttachableOutcomeEffectWorker_RandomRecruit 触发一个
-	/// "WandererJoins（流浪者加入）"任务（Quest）。触发前，它会在任务的"石板"
-	/// （Slate，一个按名字存参数的容器）里写入一个名为 "overridePawnGenParams" 的
-	/// 小人生成参数（PawnGenerationRequest）。
+	/// 【为什么挂 GeneratePawn_NewTemp 而不是 GeneratePawn（血泪教训）】
+	/// Ideology DLC 的招募仪式（Recruitment）判定成功时，由
+	/// RitualAttachableOutcomeEffectWorker_RandomRecruit.Apply 触发一个 "WandererJoins"
+	/// 任务（Quest），并在任务石板（Slate）里写入 "overridePawnGenParams" 小人生成参数。
 	///
-	/// 随后任务节点 QuestNode_Root_WandererJoin_WalkIn.GeneratePawn() 负责真正生成小人，
-	/// 它的逻辑是：
-	///     如果 Slate 里存在 "overridePawnGenParams" → 用这个参数生成（仪式招募的情况）；
-	///     否则 → 用一套默认参数生成（其他来源，比如部分事件触发的流浪者）。
+	/// 任务真正生成小人时，走的是基类 QuestNode_Root_WandererJoin.RunInt()：
+	///     Pawn pawn = GeneratePawn_NewTemp(map);   ← 真正的生成入口（带地图参数）
+	/// 而无参的 GeneratePawn() 只是另一个便捷方法（内部转调 GeneratePawn_NewTemp(null)），
+	/// 任务链路根本不会调用它！
 	///
-	/// 所以只要在 GeneratePawn 跑完后检查 Slate 里有没有 "overridePawnGenParams"，
-	/// 就能精确锁定"文化仪式招募的小人"，绝不误伤其他来源的小人。
-	/// （原版代码里只有招募仪式会写这个键——已通过反编译源码逐一核实。）
+	/// v1 补丁挂在 GeneratePawn() 上 → 永远不触发 → 技能压不下来。这就是本 mod 之前"不生效"的根因。
+	/// 本补丁改挂实际入口 GeneratePawn_NewTemp。
 	///
-	/// 另外：游戏开局的"随机流浪者加入"事件（IncidentWorker_WandererJoin）根本不走
-	/// 任务系统，而是自己直接生成小人，所以天然不受影响。
+	/// 【为什么用 Slate 里的 "overridePawnGenParams" 键做判断】
+	/// 原版代码里只有招募仪式（RandomRecruit）写入这个键（已通过反编译 1.6 源码逐条核实），
+	/// 其它来源触发 WandererJoins 任务时不会写。所以检查它就能精确锁定"仪式招募的小人"。
+	/// 随机"流浪者加入"事件（IncidentWorker_WandererJoin）根本不走任务系统，
+	/// 而是自己直接生成小人，所以天然不受本补丁影响（符合设计意图）。
 	/// </summary>
-	[HarmonyPatch(typeof(QuestNode_Root_WandererJoin_WalkIn), nameof(QuestNode_Root_WandererJoin_WalkIn.GeneratePawn))]
-	public static class Patch_WandererJoinWalkIn_GeneratePawn
+	[HarmonyPatch(typeof(QuestNode_Root_WandererJoin_WalkIn), nameof(QuestNode_Root_WandererJoin_WalkIn.GeneratePawn_NewTemp))]
+	public static class Patch_WandererJoinWalkIn_GeneratePawn_NewTemp
 	{
 		/// <summary>
 		/// Postfix（后置补丁）：在原方法执行完毕后运行。
 		///
 		/// Harmony 特殊参数说明：
 		///   __result —— 原方法的返回值，这里就是刚生成好的小人（Pawn）。
-		///              用 __result 接收即可读取；本补丁不需要替换返回值，所以不加 ref。
+		///               用 __result 接收即可读取；本补丁不需要替换返回值，所以不加 ref。
+		///
+		/// 原方法和本 Postfix 在同一调用栈里连续执行，QuestGen.slate 在两者之间不会被改动，
+		/// 所以在 Postfix 里读石板、判定 "overridePawnGenParams" 是可靠、准确的。
 		/// </summary>
 		[HarmonyPostfix]
 		public static void Postfix(Pawn __result)
@@ -47,7 +50,6 @@ namespace RITLIM.CulturalRitualLimits
 			}
 
 			// QuestGen.slate 是"当前正在生成的任务"的石板，只在任务生成期间有效。
-			// GeneratePawn 恰好是在任务生成过程中被调用的，所以这里一定能拿到。
 			// 保险起见还是判一下空。
 			Slate slate = QuestGen.slate;
 			if (slate == null)
@@ -56,7 +58,6 @@ namespace RITLIM.CulturalRitualLimits
 			}
 
 			// 关键判断：Slate 里存在 "overridePawnGenParams" ⇔ 这个小人是文化仪式招募来的。
-			// （原版只有招募仪式会写入这个键；其他途径触发 WandererJoins 任务时不会写。）
 			// TryGet 的第二个参数是 out 输出，我们只需要知道"是否存在"，所以用 out _ 丢弃。
 			if (!slate.TryGet<PawnGenerationRequest>("overridePawnGenParams", out _))
 			{
@@ -65,6 +66,9 @@ namespace RITLIM.CulturalRitualLimits
 
 			// 走到这里，说明这小人确实是仪式招募来的——按设置压低技能。
 			ClampSkills(__result);
+
+			// 留一句日志，方便确认补丁真的生效了（游戏里 ~ 键开发者控制台 / Player.log）。
+			Log.Message("[Cultural Ritual Limits] 仪式招募的小人技能已压低（上限 " + CulturalRitualLimitsMod.settings.maxSkillLevel + "）");
 		}
 
 		/// <summary>

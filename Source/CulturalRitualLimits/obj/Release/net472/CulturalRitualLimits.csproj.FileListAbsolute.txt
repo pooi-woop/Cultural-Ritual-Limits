@@ -1,7 +1,0 @@
-D:\Backup\Downloads\Cultural Ritual Limits\Assemblies\net472\CulturalRitualLimits.dll
-D:\Backup\Downloads\Cultural Ritual Limits\Source\CulturalRitualLimits\obj\Release\net472\CulturalRitualLimits.csproj.AssemblyReference.cache
-D:\Backup\Downloads\Cultural Ritual Limits\Source\CulturalRitualLimits\obj\Release\net472\CulturalRitualLimits.GeneratedMSBuildEditorConfig.editorconfig
-D:\Backup\Downloads\Cultural Ritual Limits\Source\CulturalRitualLimits\obj\Release\net472\CulturalRitualLimits.AssemblyInfoInputs.cache
-D:\Backup\Downloads\Cultural Ritual Limits\Source\CulturalRitualLimits\obj\Release\net472\CulturalRitualLimits.AssemblyInfo.cs
-D:\Backup\Downloads\Cultural Ritual Limits\Source\CulturalRitualLimits\obj\Release\net472\CulturalRitualLimits.csproj.CoreCompileInputs.cache
-D:\Backup\Downloads\Cultural Ritual Limits\Source\CulturalRitualLimits\obj\Release\net472\CulturalRitualLimits.dll
